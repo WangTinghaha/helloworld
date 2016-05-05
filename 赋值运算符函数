@@ -1,0 +1,59 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+template<class T>
+class CMyString
+{
+public:
+	CMyString(char* pData = " ")  //构造
+		:m_pData(new char[strlen(pData) + 1])
+	{
+		strcpy(m_pData, pData);
+	}
+	CMyString(const CMyString& str)  //拷贝构造
+		:m_pData(new char[strlen(str.m_pData)+1])
+	{
+		strcpy(m_pData,str.m_pData);
+	}
+	CMyString& operator=(const CMyString& str)  //赋值
+	{
+		if (this != &str)  //防止自赋值
+		{
+			delete[] m_pData;  //释放原来空间
+			m_pData = new char[strlen(str.m_pData) + 1]; //开辟新的空间
+			strcpy(m_pData,str.m_pData);
+		}
+		return *this;
+	}
+	//CMyString& operator=(const CMyString& str)  //赋值
+	//{
+	//	if (this != &str)
+	//	{
+	//		CMyString Tmp(str);  //创建临时变量
+	//		char* pTmp = Tmp.m_pData;
+	//		Tmp.m_pData = m_pData; //把临时变量的对象和自身对象交换
+	//		m_pData = pTmp;       //指针指向之前的内存，出了if语句后自动调用析构函数，将临时变量对象所指向的内存释放
+	//	}
+	//	return *this;
+	//}
+	//CMyString& operator=(CMyString str)  //赋值(现代写法)
+	//{
+	//	swap(m_pData, str.m_pData);
+	//	return *this;
+	//}
+	~CMyString()
+	{
+		delete[] m_pData;
+	}
+protected:
+	char* m_pData;
+};
+int main()
+{
+	CMyString<char> str1("bit");
+	CMyString<char> str2(str1);
+	CMyString<char> str3;
+	str3 = str2;
+	getchar();
+	return 0;
+}
