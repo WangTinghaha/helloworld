@@ -1,0 +1,46 @@
+//在一个二维数组中，每一行都按照从左到右递增的顺序排序，每一列都按照从上到下递增的顺序排序。
+//请完成一个函数，输入这样的一个二维数组和一个整数，判断数组中是否含有该整数。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+bool Find(int* a,int rows,int cols,int x)
+{
+	if (a != NULL&&rows > 0&&cols > 0)
+	{
+		int row = 0;
+		int col = cols - 1;
+		while (row < rows&&col >= 0)
+		{
+			if (a[row*cols + col] == x) //当前数和要查找的数相同返回真
+			{
+				return true;
+				break;
+			}
+			else if (a[row*cols + col]>x)//要查找的数小于当前数时，在之前的列中查找
+			{
+				col--;
+			}
+			else                        //要查找的数大于当前数时，在之后的行中查找
+			{
+				row++;
+			}
+		}
+	}
+	return false;
+}
+int main()
+{
+	int arr[4][4] = 
+	{
+		{ 1, 2, 8, 9 },
+		{2, 4, 9, 12},
+		{4, 7, 10, 13},
+		{6, 8, 11, 15},
+	};
+	int rows = 4;
+	int cols = 4;
+	int ret=Find((int*)arr,rows,cols,7);
+	cout << ret << endl;
+	getchar();
+	return 0;
+}
