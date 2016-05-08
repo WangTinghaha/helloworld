@@ -1,0 +1,50 @@
+//实现一个函数，把字符串中的每个空格替换成“%20”。例如输入“We are happy.”，
+//则输出“We%20are%20happy.”
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<assert.h>
+#include<iostream>
+using namespace std;
+void ReplaceBlank(char* str)
+{
+	assert(str);
+	int len= strlen(str);
+	int newlen = 0;
+	int blank = 0;
+	char* tmp = str;
+	while (*tmp != '\0')
+	{
+		if (*tmp != ' ')
+		{
+			tmp++;
+		}
+		else
+		{
+			blank++;
+			tmp++;
+		}
+	}
+	newlen = len + blank * 2;//新的长度就是原来长度加上2倍空格数
+	while (len < newlen)     //从后面的空格处开始向前放20%
+	{
+		if (str[len]!=' ') 
+		{
+			str[newlen--] = str[len--];
+		}
+		else
+		{
+			str[newlen--] = '0';
+			str[newlen--] = '2';
+			str[newlen--] = '%';
+			len--;
+		}
+	}
+}
+int main()
+{
+	char str1[20] = "We are happy.";
+	cout << str1 << endl;
+    ReplaceBlank(str1) ;
+	cout << str1 << endl;
+	getchar();
+	return 0;
+}
