@@ -1,0 +1,68 @@
+//输入一个链表的头结点，从尾到头反过来打印出每个节点的值。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<assert.h>
+#include<stack>
+#include<iostream>
+using namespace std;
+typedef struct ListNode
+{
+	int data;
+	ListNode* next;
+}ListNode,*pList;
+ListNode *BuyNode(int x)  //创建一个新节点
+{
+	ListNode *Node = new ListNode();
+	Node->data = x;
+	Node->next = NULL;
+	return Node;
+}
+void connectListNode(ListNode *curNode, ListNode *nextNode)
+{
+	if (curNode == NULL)
+	{
+		printf("error");
+		return;
+	}
+	curNode->next = nextNode;
+}
+void printList(ListNode* pHead)
+{
+	ListNode* Node = pHead;
+	while (Node)
+	{
+		cout << Node->data;
+		Node = Node->next;
+	}
+	cout << endl;
+}
+void PrintListReverse(ListNode* pHead)
+{
+	stack<ListNode*> s;
+	ListNode* pNode = pHead;
+	while (pNode != NULL)
+	{
+		s.push(pNode);
+		pNode = pNode->next;
+	}
+	while (!s.empty())
+	{
+		pNode = s.top();
+		cout << pNode->data;
+		s.pop();
+	}
+}
+int main()
+{
+	ListNode *node1 = BuyNode(1);
+	ListNode *node2 = BuyNode(2);
+	ListNode *node3 = BuyNode(3);
+	connectListNode(node1, node2);
+	connectListNode(node2, node3);
+	cout << "原来的链表是：";
+	printList(node1);
+	cout<<"从尾到头打印出来是:";
+	PrintListReverse(node1);
+	getchar();
+	return 0;
+}
+
