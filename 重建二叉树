@@ -1,0 +1,72 @@
+//输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+struct BinaryTreeNode
+{
+	int _data;
+	BinaryTreeNode* _left;
+	BinaryTreeNode* _right;
+};
+BinaryTreeNode* BuildRecursivly(int* pPrevOrderStart, int* pPrevOrderEnd,
+	int* pInOrderStart, int* pInOrderEnd)//递归建立二叉树
+{
+	//先序遍历序列中取出第一个元素为根节点元素
+	int rootData = pPrevOrderStart[0];
+	//重建根节点
+	BinaryTreeNode* root = new BinaryTreeNode;
+	root->_data = rootData;
+	root->_left = NULL;
+	root->_right = NULL;
+	//递归结束
+	if (pPrevOrderStart == pPrevOrderEnd)
+	{
+		if (pInOrderStart == pInOrderEnd && *pPrevOrderStart == *pInOrderStart)
+			return root;
+		else
+			return NULL;
+	}
+	//中序遍历序列中找出根节点的位置
+	int* rootInorder = pInOrderStart;
+	while (rootInorder <= pInOrderEnd&&*rootInorder != rootData)
+	{
+		++rootInorder;
+	}
+	if (rootInorder == pInOrderEnd&&*rootInorder != rootData)
+	{
+		return NULL;
+	}
+	int leftTreeLen = rootInorder - pInOrderStart;//左子树的长度
+	int* PrevOrderleftTreeLen = pPrevOrderStart + leftTreeLen;//左子树的起始位置
+	if (leftTreeLen > 0)//递归构建左子树
+	{
+		root->_left = BuildRecursivly(pPrevOrderStart + 1, PrevOrderleftTreeLen, 
+			                          pInOrderStart, rootInorder-1);
+	}
+	if (leftTreeLen<pPrevOrderEnd - pPrevOrderStart)
+	{
+		root->_right = BuildRecursivly(PrevOrderleftTreeLen + 1, pPrevOrderEnd,
+			rootInorder + 1, pInOrderEnd);
+	}
+	return root;
+}
+BinaryTreeNode* BuildBinaryTree(int* PrevOrder, int* InOrder,int size)
+{
+	if (PrevOrder == NULL || InOrder == NULL)
+	{
+		return NULL;
+	}
+	else
+	{
+		return BuildRecursivly(PrevOrder, PrevOrder + size - 1, InOrder, InOrder+size-1);
+	}
+}
+int main()
+{
+	int PrevOrder[] = { 1, 2, 4, 7, 3, 5, 6, 8 };//前序遍历的结果
+	int InOrder[] = { 4, 7, 2, 1, 5, 3, 8, 6 };  //中序遍历的结果
+	int size = sizeof(PrevOrder) / sizeof(PrevOrder[0]);
+	BinaryTreeNode *root = BuildBinaryTree(PrevOrder, InOrder, size);
+	getchar();
+	return 0;
+}
