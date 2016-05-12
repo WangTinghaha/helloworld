@@ -1,0 +1,42 @@
+//把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。
+//输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+int Min(int* a,int size)
+{
+	if (a==NULL||size<=0)
+	{
+		cout << "error";
+	}
+	int left = 0;
+	int right = size - 1;
+	int mid = 0;
+	while (left<right)
+	{
+		if (right - left == 1)
+		{
+			mid = right;
+			break;
+		}
+		mid = (left+right)/2;
+		if (a[mid] >=a[left])
+		{
+			left = mid;
+		}
+		else if (a[mid] <=a[left])
+		{
+			right = mid;
+		}
+	}
+	return a[mid];
+}
+int main()
+{
+	int a[] = {5,1,2,3,4};
+	int size = sizeof(a) / sizeof(a[0]);
+	int ret=Min(a,size);
+	cout << ret;
+	getchar();
+	return 0;
+}
