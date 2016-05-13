@@ -1,0 +1,35 @@
+//写一个函数，输入n，求斐波那契额数列的第n项。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+long long Fibnacci(unsigned int n)//递归实现
+{
+	if (n <= 0)
+		return 0;
+	if (n == 1)
+		return 1;
+	return Fibnacci(n - 1) + Fibnacci(n-2);
+} 
+long long Fibnacci(unsigned int n)//非递归实现
+{
+	long long first = 0;
+	long long second = 1;
+	long long ret = 0;
+	if (n < 2)
+		return n;
+	while (n>=2)
+	{
+		ret = first + second;
+		first = second;
+		second = ret;
+		n--;
+	}
+	return ret;
+}
+int main()
+{
+	int ret = Fibnacci(5);
+	cout << ret;
+	getchar();
+	return 0;
+}
