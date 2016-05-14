@@ -1,0 +1,51 @@
+//实现一个函数，输入一个整数，输出该数二进制表示中1的个数。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+//第一种实现
+int FNumberOf1(int n)
+{
+	int count = 0;
+	while (n)
+	{
+		if (n & 1)//数的最后一位是1时，count++
+			count++;
+		n = n >> 1;//右移1位
+	}
+	return count;
+}
+//第二种实现
+int SNumberOf1(int n)
+{
+	int count = 0;
+	unsigned int flag=1;
+	while (flag)  //flag不为0时
+	{
+		if (n&flag)//依次判断n的每一位是否为1，为1则count++
+			count++;
+		flag = flag << 1;//左移1位
+	}
+	return count;
+}
+//第三种实现
+int TNumberOf1(int n)
+{
+	int count = 0;
+	while (n)
+	{
+		++count;
+		n = (n-1)&n;//先减1再与
+	}
+	return count;
+}
+int main()
+{
+	int ret1=FNumberOf1(9);
+	cout << ret1<<endl;
+	int ret2 = SNumberOf1(9);
+	cout << ret2<<endl;
+	int ret3 = TNumberOf1(9);
+	cout << ret3;
+	getchar();
+	return 0;
+}
