@@ -1,0 +1,84 @@
+//输入数字n，按顺序打印出从1最大的n位十进制数。比如输入3，则打印出1、2、3一直到最大的3位数即999。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+
+//陷阱解法
+void Print1ToMaxOfDigits1(int n)
+{
+	int number = 1;
+	for (int i = 0; i < n; ++i)
+	{
+		number = number * 10;
+	}
+	for (int j = 1; j < number ; ++j)
+	{
+		cout << "  " << j;
+	}
+}
+
+//考虑大数问题的解法
+bool Increment(char* number)//判断是否溢出
+ {
+	bool IsverFlow = false;
+	int nTakOver = 0;
+	int nLength = strlen(number);
+	for (int i = nLength - 1; i >= 0; i--)
+	{
+		int nSum = number[i] - '0'+nTakOver;
+		if (i == nLength - 1)
+			nSum++;
+		if (nSum >= 10)
+		{
+			if (i == 0)//第一个字符加1为0时则产生进位溢出
+				IsverFlow = true;
+			else
+			{
+				nSum -= 10;
+				nTakOver = 1;
+				number[i] = '0' + nSum;
+			}
+		}
+		else
+		{
+			number[i] = '0' + nSum;
+			break;
+		}
+	}
+	return IsverFlow;
+}
+void PrintNumber(char* number)//打印
+{
+	bool IsBeginning0 = true;
+	int nLength = strlen(number);
+	for (int i = 0; i < nLength;++i)
+	{
+		if (IsBeginning0&&number[i] != '0')//遇到非0字符才开始打印
+			IsBeginning0 = false;
+		if (!IsBeginning0)
+		{
+			cout<< number[i];
+		}
+	}
+	cout << "  ";
+}
+void Print1ToMaxOfDigits(int n)
+{
+	if (n <= 0)
+		return;
+	char* number = new char[n + 1];//开辟长度为n+1的字符串
+	memset(number,'0',n);//把字符串中的每个字符都初始化为'0'
+	number[n] = '\0';//字符串最后一位置为'\0'
+	while (!Increment(number))//没有溢出时打印
+	{
+		PrintNumber(number);
+	}
+	delete[]number;
+}
+int main()
+{
+	/*Print1ToMaxOfDigits1(3);*/
+	Print1ToMaxOfDigits(4);
+	getchar();
+	return 0;
+}
