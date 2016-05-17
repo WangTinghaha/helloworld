@@ -1,0 +1,83 @@
+//给定单向链表的头指针和一个结点指针，定义一个函数在0(1)时间删除该结点。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+struct ListNode
+{
+	int _value;
+	ListNode* _next;
+};
+ListNode *BuyNode(int x)  //创建一个新节点
+{
+	ListNode *Node = new ListNode();
+	Node->_value = x;
+	Node->_next = NULL;
+	return Node;
+}
+void connectListNode(ListNode *curNode, ListNode *nextNode)//连接结点
+{
+	if (curNode == NULL)
+	{
+		cout<<"error";
+		return;
+	}
+	curNode->_next = nextNode;
+}
+void DeleteNode(ListNode* pHead, ListNode* pDelete)  
+{ 
+	if (pHead == NULL || pDelete == NULL)
+		return;
+	//删除节点是头结点
+	if (pHead == pDelete)
+	{
+		delete pDelete;
+		pDelete = NULL;
+		pHead = NULL;
+	}
+	//删除节点不是头结点也不是尾结点时
+	else if (pDelete->_next != NULL)
+	{
+		ListNode* pNext = pDelete->_next;
+		pDelete->_value = pNext->_value;//交换数据
+		pDelete->_next = pNext->_next;
+		delete pNext;
+		pNext = NULL;
+	}
+	//删除节点是尾节点
+	else
+	{
+		ListNode* cur = pHead;
+		while (cur->_next != pDelete)
+		{
+			cur = cur->_next;
+		}
+		cur->_next =NULL;
+		delete pDelete;
+		pDelete = NULL;
+	}
+}
+void printList(ListNode* pHead)//打印链表
+{
+	ListNode* cur = pHead;
+	while (cur)
+	{
+		cout << cur->_value;
+		cur = cur->_next;
+	}
+	cout << endl;
+}
+int main()
+{
+	ListNode *node1 = BuyNode(1);
+	ListNode *node2 = BuyNode(2);
+	ListNode *node3 = BuyNode(3);
+	connectListNode(node1, node2);
+	connectListNode(node2, node3);
+	cout << "原来的链表是：";
+	printList(node1);
+	cout << "删除节点后的链表是:";
+	DeleteNode(node1,node2);
+	printList(node1);
+	getchar();
+	return 0;
+}
