@@ -1,0 +1,77 @@
+//输入一个链表，输出该链表中倒数第k个结点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾结点是倒数第1个结点。
+//例如一个链表有6个结点，从头结点开始它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个结点是值为4的结点。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+struct ListNode
+{
+	int _value;
+	ListNode* _next;
+};
+ListNode *BuyNode(int x)  //创建一个新节点
+{
+	ListNode *Node = new ListNode();
+	Node->_value = x;
+	Node->_next = NULL;
+	return Node;
+}
+void connectListNode(ListNode *curNode, ListNode *nextNode)//连接结点
+{
+	if (curNode == NULL)
+	{
+		cout << "error";
+		return;
+	}
+	curNode->_next = nextNode;
+}
+ListNode* FindKthToTail(ListNode* pHead,int k)//查找链表中倒数第k个结点
+{
+	if (pHead == NULL || k <= 0)
+		return 0;
+	int i = 0;
+	ListNode* cur = pHead;
+	while (i<k-1)
+	{
+		cur = cur->_next;
+		i++;
+	}
+	ListNode* pFirst = cur;//第一个指针指向第k个结点
+	ListNode* pSecond = pHead;//第二个指针指向第一个结点
+	while (pFirst->_next!=NULL)//第一个指针指向最后一个指针时，第二个指针指向倒数第k个
+	{
+		pFirst=pFirst->_next;
+		pSecond=pSecond->_next;
+	}
+	return pSecond;
+}
+void printList(ListNode* pHead)//打印链表
+{
+	ListNode* cur = pHead;
+	while (cur)
+	{
+		cout << cur->_value;
+		cur = cur->_next;
+	}
+	cout << endl;
+}
+int main()
+{
+
+	ListNode *node1 = BuyNode(1);
+	ListNode *node2 = BuyNode(2);
+	ListNode *node3 = BuyNode(3);
+	ListNode *node4 = BuyNode(4);
+	ListNode *node5 = BuyNode(5);
+	ListNode *node6 = BuyNode(6);
+	connectListNode(node1, node2);
+	connectListNode(node2, node3);
+	connectListNode(node3, node4);
+	connectListNode(node4, node5);
+	connectListNode(node5, node6);
+	cout << "原来的链表是：";
+	printList(node1);
+	cout << "链表中倒数第k个结点是:";
+	cout<<FindKthToTail(node1,3)->_value;
+	getchar();
+	return 0;
+}
