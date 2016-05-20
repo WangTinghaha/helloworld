@@ -1,0 +1,72 @@
+//定义一个函数，输入一个链表的头结点，反转该链表并输出翻转后链表的头结点。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+struct ListNode
+{
+	int _value;
+	ListNode* _next;
+};
+ListNode* BuyNode(int x)  //创建一个新节点
+{
+	ListNode *Node = new ListNode();
+	Node->_value = x;
+	Node->_next = NULL;
+	return Node;
+}
+void connectListNode(ListNode *curNode, ListNode *nextNode)//连接结点
+{
+	if (curNode == NULL)
+	{
+		cout << "error";
+		return;
+	}
+	curNode->_next = nextNode;
+}
+ListNode* ReverseList(ListNode* pHead)//反转链表
+{
+	if (pHead == NULL)
+		return 0;
+	ListNode* newHead = NULL;//新链表的头结点
+	ListNode* prev = NULL;//保存前一个结点
+	ListNode* cur = pHead;
+	while (cur!=NULL)
+	{
+		ListNode* pNext = cur->_next;//保存当前结点的下一个结点
+		if (pNext == NULL)
+			newHead = cur;
+		cur->_next = prev;
+		prev = cur;
+		cur = pNext;
+	}
+	return newHead;
+}
+void printList(ListNode* pHead)//打印链表
+{
+	ListNode* cur = pHead;
+	while (cur)
+	{
+		cout << cur->_value;
+		cur = cur->_next;
+	}
+	cout << endl;
+}
+int main()
+{
+
+	ListNode *node1 = BuyNode(1);
+	ListNode *node2 = BuyNode(2);
+	ListNode *node3 = BuyNode(3);
+	ListNode *node4 = BuyNode(4);
+	ListNode *node5 = BuyNode(5);
+	connectListNode(node1, node2);
+	connectListNode(node2, node3);
+	connectListNode(node3, node4);
+	connectListNode(node4, node5);
+	cout << "原来的链表是：";
+	printList(node1);
+	cout << "反转后的链表是：";
+	printList(ReverseList(node1));
+	getchar();
+	return 0;
+}
