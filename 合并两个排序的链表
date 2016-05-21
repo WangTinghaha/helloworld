@@ -1,0 +1,78 @@
+//输入两个递增排序的链表。合并这两个链表并使新链表中的结点仍然是按照递增排序的。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+struct ListNode
+{
+	int _value;
+	ListNode* _next;
+};
+ListNode* BuyNode(int x)//创建一个结点
+{
+	ListNode* Node = new ListNode();
+	Node->_value = x;
+	Node->_next = NULL;
+	return Node;
+}
+void ConnectListNode(ListNode *curNode, ListNode *nextNode)//连接结点
+{
+	if (curNode == NULL)
+	{
+		return;
+	}
+	curNode->_next = nextNode;
+}
+ListNode* MergeList(ListNode* pHead1,ListNode* pHead2)//合并链表
+{
+	if (pHead1 == NULL)
+		return pHead2;
+	else if (pHead2 == NULL)
+		return pHead1;
+	ListNode* pMergeHead = NULL;//合并链表的头结点
+	if (pHead1->_value<pHead2->_value)
+	{
+		pMergeHead = pHead1;
+		pMergeHead->_next = MergeList(pHead1->_next,pHead2);
+	}
+	else 
+	{
+		pMergeHead = pHead2;
+		pMergeHead->_next = MergeList(pHead1, pHead2->_next);
+	}
+	return pMergeHead;
+}
+void PrintList(ListNode* pHead)//打印链表
+{
+	ListNode* cur = pHead;
+	while (cur)
+	{
+		cout << cur->_value;
+		cur = cur->_next;
+	}
+	cout << endl;
+}
+int main()
+{
+	ListNode *node1 = BuyNode(1);
+	ListNode *node2 = BuyNode(3);
+	ListNode *node3 = BuyNode(5);
+	ListNode *node4 = BuyNode(7);
+	ConnectListNode(node1, node2);
+	ConnectListNode(node2, node3);
+	ConnectListNode(node3, node4);
+	cout << "第一个链表是：";
+	PrintList(node1);
+	ListNode *node5 = BuyNode(2);
+	ListNode *node6 = BuyNode(4);
+	ListNode *node7 = BuyNode(6);
+	ListNode *node8 = BuyNode(8);
+	ConnectListNode(node5, node6);
+	ConnectListNode(node6, node7);
+	ConnectListNode(node7, node8);
+	cout << "第二个链表是：";
+	PrintList(node5);
+	cout << "合并后的链表是：";
+	PrintList(MergeList(node1, node5));
+	getchar();
+	return 0;
+}
