@@ -1,0 +1,103 @@
+//输入两颗二叉树A和B，判断B是不是A的子结构。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+template<class T>
+struct BinaryTreeNode
+{
+	BinaryTreeNode<T>* _left;
+	BinaryTreeNode<T>* _right;
+	T _data;
+	BinaryTreeNode(const T& x)
+		:_left(NULL)
+		, _right(NULL)
+		, _data(x)
+	{}
+};
+template<class T>
+class BinaryTree
+{
+public:
+	BinaryTree(const T* a, size_t size, const T& invalid)
+	{
+		size_t index = 0;
+		_root = _CreatTree(a, size, index, invalid);
+	}
+	void PrevOder()
+	{
+		_PrevOder(_root);
+	}
+	bool HasSubtree(BinaryTree<T>& b)
+	{
+		return _HasSubtree(_root,b._root);
+	}
+protected:
+	BinaryTreeNode<T>* _CreatTree(const T* a, size_t size, size_t& index, const T& invalid)//创建树
+	{
+		BinaryTreeNode<T>* _root = NULL;
+		if (index<size && a[index] != '#')
+		{
+			_root = new BinaryTreeNode<T>(a[index]);
+			_root->_left = _CreatTree(a, size, ++index, invalid);  //递归创建左子树
+			_root->_right = _CreatTree(a, size, ++index, invalid); //递归创建右子树
+		}
+		return _root;
+	}
+	void _PrevOder(BinaryTreeNode<T>* _root)  //前序遍历（根、左、右）
+	{
+		if (_root == NULL)
+			return;
+		cout << _root->_data << " ";
+		_PrevOder(_root->_left);
+		_PrevOder(_root->_right);
+	}
+protected:
+	bool _DoesTree1HaveTree2(BinaryTreeNode<T>* pRoot1, BinaryTreeNode<T>* pRoot2)
+	{
+		if (pRoot1 == NULL)
+			return true;
+		if (pRoot2 == NULL)
+			return false;
+		if (pRoot1->_data != pRoot2->_data)
+			return false;
+		return _DoesTree1HaveTree2(pRoot1->_left, pRoot2->_left)
+			&& _DoesTree1HaveTree2(pRoot1->_right, pRoot2->_right);
+	}
+	bool _HasSubtree(BinaryTreeNode<T>* pRoot1, BinaryTreeNode<T>* pRoot2)
+	{
+		bool ret = false;
+		if (pRoot1 != NULL&&pRoot2 != NULL)
+		{
+			if (pRoot1->_data == pRoot2->_data)
+			{
+				ret = _DoesTree1HaveTree2(pRoot1, pRoot2);
+			}
+			if (!ret)
+				ret = _HasSubtree(pRoot1->_left, pRoot2);
+			if (!ret)
+				ret = _HasSubtree(pRoot1->_right, pRoot2);
+		}
+		return ret;
+	}
+protected:
+	BinaryTreeNode<T>* _root;
+};
+int main()
+{
+	int a1[10] = { 1, 2, 3, '#', '#', 4, '#', '#', 5, 6 };
+	BinaryTree<int> t1(a1, 10, '#');
+	cout << "前序遍历：";
+	t1.PrevOder();
+	cout << endl;
+	int a2[15] = { 1, 2, '#', 3, '#', '#', 4, 5, '#', 6, '#', 7, '#', '#', 8 };
+	BinaryTree<int> t2(a2, 15, '#');
+	cout << "前序遍历：";
+	t2.PrevOder();
+	cout << endl;
+	if (t2.HasSubtree(t1)== true)
+		cout << "Yes";
+	else
+		cout << "No";
+	getchar();
+	return 0;
+}
