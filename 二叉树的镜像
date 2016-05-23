@@ -1,0 +1,83 @@
+//请完成一个函数，输入一个二叉树，该函数输出它的镜像。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+template<class T>
+struct BinaryTreeNode
+{
+	BinaryTreeNode<T>* _left;
+	BinaryTreeNode<T>* _right;
+	T _data;
+	BinaryTreeNode(const T& x)
+		:_left(NULL)
+		, _right(NULL)
+		, _data(x)
+	{}
+};
+template<class T>
+class BinaryTree
+{
+public:
+	BinaryTree(const T* a, size_t size, const T& invalid)
+	{
+		size_t index = 0;
+		_root = _CreatTree(a, size, index, invalid);
+	}
+	void PrevOder()
+	{
+		_PrevOder(_root);
+	}
+	void MirrorRecursively()
+	{
+		_MirrorRecursively(_root);
+	}
+protected:
+	BinaryTreeNode<T>* _CreatTree(const T* a, size_t size, size_t& index, const T& invalid)//创建树
+	{
+		BinaryTreeNode<T>* _root = NULL;
+		if (index<size && a[index] != '#')
+		{
+			_root = new BinaryTreeNode<T>(a[index]);
+			_root->_left = _CreatTree(a, size, ++index, invalid);  //递归创建左子树
+			_root->_right = _CreatTree(a, size, ++index, invalid); //递归创建右子树
+		}
+		return _root;
+	}
+	void _PrevOder(BinaryTreeNode<T>* _root)  //前序遍历（根、左、右）
+	{
+		if (_root == NULL)
+			return;
+		cout << _root->_data << " ";
+		_PrevOder(_root->_left);
+		_PrevOder(_root->_right);
+	}
+	void _MirrorRecursively(BinaryTreeNode<T>* _root)//树的镜像
+	{
+		if (_root == NULL || (_root->_left == NULL&&_root->_right == NULL))
+			return;
+		BinaryTreeNode<T>* tmp = _root->_left;
+		_root->_left = _root->_right;
+		_root->_right = tmp;
+		//递归交换左右结点
+		if (_root->_left)
+			_MirrorRecursively(_root->_left);
+		if (_root->_right)
+			_MirrorRecursively(_root->_right);
+	}
+protected:
+	BinaryTreeNode<T>* _root;
+};
+int main()
+{
+	int a1[10] = { 1, 2, 3, '#', '#', 4, '#', '#', 5, 6 };
+	BinaryTree<int> t1(a1, 10, '#');
+	cout << "原二叉树的前序遍历：";
+	t1.PrevOder();
+	cout << endl;
+	t1.MirrorRecursively();
+	cout << "成镜像的二叉树的前序遍历：";
+	t1.PrevOder();
+	cout << endl;
+	getchar();
+	return 0;
+}
