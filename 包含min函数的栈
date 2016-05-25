@@ -1,0 +1,53 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<assert.h>
+#include<stack>
+#include<iostream>
+using namespace std; 
+template<class T>
+class StackmMin
+{
+public:
+	void push(const T& x);
+	void pop();
+	T& min();
+private:
+	stack<T> _data;
+	stack<T> _min;
+};
+template<class T>
+void StackmMin<T>::push(const T& x)
+{
+	_data.push(x);
+	if (_min.size() == 0 || _min.top())
+		_min.push(x);
+	else
+		_min.push(_min.top());
+}
+template<class T>
+void StackmMin<T>::pop()
+{
+	assert(_data.size()>0&&_min.size()>0);
+	_data.pop();
+	_min.pop();
+}
+template<class T>
+T& StackmMin<T>::min()
+{
+	assert(_data.size()>0 && _min.size()>0);
+	return _min.top();
+}
+int main()
+{
+	StackmMin<int> s;
+	s.push(3);
+	cout << s.min()<<endl;
+	s.push(4);
+	s.push(2);
+	s.push(1);
+	cout << s.min()<<endl;
+	s.push(0);
+	cout << s.min()<<endl;
+	getchar();
+	return 0;
+}
+
