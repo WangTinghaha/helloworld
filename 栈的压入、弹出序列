@@ -1,0 +1,44 @@
+//输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+#include<stack>
+using namespace std;
+bool IsPopOrder(int* pPush,int* pPop,int length)
+{
+	bool ret = false;
+	if (pPush != NULL && pPop != NULL && length > 0)
+	{
+		int* pNextPush = pPush;//下一个入栈的数
+		int* pNextPop = pPop;//下一个弹出的数
+		stack<int> s;
+		while (pNextPop-pPop<length)
+		{
+			while (s.empty() || s.top() != *pNextPop)//下一个弹出的数不在栈顶时，
+				                                     //继续将栈中的数压入辅助栈
+			{
+				if (pNextPush - pPush == length)
+					break;
+				s.push(*pNextPush);
+				pNextPush++;
+			}
+
+			if (s.top() != *pNextPop)
+				break;
+
+			s.pop();     //下一个弹出的数是栈顶元素时，直接弹出
+			pNextPop++;
+		}
+		if (s.empty() && pNextPop - pPop == length)
+			ret = true;
+	}
+	return ret;
+}
+int main()
+{
+	int pPush[5] = {1,2,3,4,5};
+	int pPop[5] = {4,3,5,1,2};
+	int length = sizeof(pPush) / sizeof(pPush[0]);
+	cout<<IsPopOrder(pPush, pPop, length);
+	getchar();
+	return 0;
+}
