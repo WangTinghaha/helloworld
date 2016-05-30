@@ -1,0 +1,109 @@
+//请实现函数ComplexListNode* Clone(ComplexListNode* pHead)，复制一个复杂链表。在复杂链表中，每个结点
+//除了有一个_next指针指向下一个节点外，还有一个_sibling指向链表中的任意结点或者NULL。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+struct ComplexListNode
+{
+	int _data;
+	ComplexListNode* _next;
+	ComplexListNode* _sibling;//随机指针，指向链表中的任意结点或者NULL
+};
+ComplexListNode* BuyNode(int x)  //创建一个新节点
+{
+	ComplexListNode *Node = new ComplexListNode();
+	Node->_data = x;
+	Node->_next = NULL;
+	return Node;
+}
+void connectListNode(ComplexListNode *curNode, ComplexListNode *nextNode)//连接结点
+{
+	if (curNode == NULL)
+	{
+		cout << "error";
+		return;
+	}
+	curNode->_next = nextNode;
+}
+void CloneNodes(ComplexListNode* pHead)//在原始链表的每个结点后复制创建新结点
+{
+	ComplexListNode* Node = pHead;
+	while (Node!=NULL)
+	{
+		ComplexListNode* CloneNode = new ComplexListNode();//创建复制结点
+		CloneNode->_data = Node->_data;
+		CloneNode->_next = Node->_next;
+		CloneNode->_sibling = NULL;
+		Node->_next = CloneNode;  //将原始结点和复制结点连接起来
+		Node = CloneNode->_next;//依次把原始结点复制
+	}
+}
+void SetSiblingNodes(ComplexListNode* pHead)//设置复制出的sibling结点
+{
+	ComplexListNode* Node = pHead;
+	while (Node != NULL)
+	{
+		ComplexListNode* CloneNode = Node->_next;
+		if (Node->_sibling != NULL)
+		{
+			CloneNode->_sibling = Node->_sibling->_next;//复制结点的随机指针指向原始结点随机指针
+			                                            //的下一个结点
+		}
+		Node = CloneNode->_next;
+	}
+}
+ComplexListNode* ReconnectNodes(ComplexListNode* pHead)//拆分链表
+{
+	ComplexListNode* Node = pHead;
+	ComplexListNode* CloneHead = NULL;
+	ComplexListNode* Clone = NULL;
+	//将长链表拆分成原始链表和复制链表
+	if (Node != NULL)
+	{
+		CloneHead = Clone = Node->_next;
+		Node->_next = Clone->_next;
+		Node = Node->_next;
+	}
+	while (Node != NULL)
+	{
+		Clone->_next = Node->_next;
+		Clone = Node->_next;
+		Node->_next = Clone->_next;
+		Node = Node->_next;
+	}
+	return CloneHead;
+}
+ComplexListNode* Clone(ComplexListNode* pHead)//链表复制
+{
+	CloneNodes(pHead);
+	SetSiblingNodes(pHead);
+	return ReconnectNodes(pHead);
+}
+void printList(ComplexListNode* pHead)//打印链表
+{
+	ComplexListNode* cur = pHead;
+	while (cur)
+	{
+		cout << cur->_data;
+		cur = cur->_next;
+	}
+	cout << endl;
+}
+int main()
+{
+	ComplexListNode *node1 = BuyNode(1);
+	ComplexListNode *node2 = BuyNode(2);
+	ComplexListNode *node3 = BuyNode(3);
+	ComplexListNode *node4 = BuyNode(4);
+	ComplexListNode *node5 = BuyNode(5);
+	connectListNode(node1, node2);
+	connectListNode(node2, node3);
+	connectListNode(node3, node4);
+	connectListNode(node4, node5);
+	cout << "原来的链表是：";
+	printList(node1);
+	cout << "复制的链表是：";
+	printList(Clone(node1));
+	getchar();
+	return 0;
+}
