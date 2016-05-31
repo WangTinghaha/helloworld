@@ -1,0 +1,103 @@
+//输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的双向链表。要求不能创建任何新的结点，只能调整树中结点指针的指向。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+template<class T>
+struct BinaryTreeNode
+{
+	BinaryTreeNode<T>* _left;
+	BinaryTreeNode<T>* _right;
+	T _data;
+	BinaryTreeNode(const T& x)
+		:_left(NULL)
+		, _right(NULL)
+		, _data(x)
+	{}
+};
+template<class T>
+class BinaryTree
+{
+public:
+	BinaryTree(const T* a, size_t size, const T& invalid)
+	{
+		size_t index = 0;
+		_root = _CreatTree(a, size, index, invalid);
+	}
+	void InOder()
+	{
+		_InOder(_root);
+	}
+	void  Convert()
+	{
+		BinaryTreeNode<T>*cur= _Convert(_root);
+		while (cur)
+		{
+			cout << cur->_data<<" ";
+			cur = cur->_right;
+		}
+	}
+protected:
+	BinaryTreeNode<T>* _Convert(BinaryTreeNode<T>* _root)
+	{
+		BinaryTreeNode<T>* pLastNode = NULL;//已经转化的双向链表的尾结点
+		ConvertNode(_root, &pLastNode);
+		//返回头结点
+		BinaryTreeNode<T>* pHead = pLastNode;
+		while (pHead != NULL&&pHead->_left != NULL)
+			pHead = pHead->_left;
+		return pHead;
+	}
+	BinaryTreeNode<T>* _CreatTree(const T* a, size_t size, size_t& index, const T& invalid)//创建树
+	{
+		BinaryTreeNode<T>* _root = NULL;
+		if (index<size && a[index] != '#')
+		{
+			_root = new BinaryTreeNode<T>(a[index]);
+			_root->_left = _CreatTree(a, size, ++index, invalid);  //递归创建左子树
+			_root->_right = _CreatTree(a, size, ++index, invalid); //递归创建右子树
+		}
+		return _root;
+	}
+	void _InOder(BinaryTreeNode<T>* _root)  //中序遍历（左、根、右）
+	{
+		if (_root == NULL)
+			return;
+		_InOder(_root->_left);
+		cout << _root->_data << " ";
+		_InOder(_root->_right);
+	}
+protected:
+	void ConvertNode(BinaryTreeNode<T>* _root, BinaryTreeNode<T>** pLastNode)
+	{
+		if (_root == NULL)
+			return;
+		BinaryTreeNode<T>* cur = _root;
+		//对左子树进行转换，pLastNode是转换后链表最后一个结点的指针
+		if (cur->_left != NULL)
+			ConvertNode(cur->_left, pLastNode);
+		//调整树的_left指针，指向上一个结点
+		cur->_left = *pLastNode;
+		//调整指向最后一个结点，_right指向下一个结点
+		if (*pLastNode != NULL)
+			(*pLastNode)->_right = cur;
+		//调整指向最后链表一个结点的指针
+		*pLastNode = cur;
+		//对树的右子树进行转换，pLastNode是转换后链表最后一个结点的指针
+		if (cur->_right != NULL)
+			ConvertNode(cur->_right, pLastNode);
+	}
+protected:
+	BinaryTreeNode<T>* _root;
+};
+int main()
+{
+	int a1[15] = { 10, 6, 4, '#', '#', 8, '#', '#', 14, 12, '#', '#', 16, '#', '#' };
+	BinaryTree<int> t1(a1, 15, '#');
+	cout << "中序遍历：";
+	t1.InOder();
+	cout << endl;
+	cout << "二叉搜索树转化为双向链表后是：";
+	t1.Convert();
+	getchar();
+	return 0;
+}
