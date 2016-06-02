@@ -1,0 +1,64 @@
+//数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如输入一个长度为9的数组{1，2，3，2，2，2，5，4，2}。
+//由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+bool InputInvalid = false;
+bool CheckInvalidArray(int* a, int size)//判断数组是否有效
+{
+	InputInvalid = false;
+	if (a == NULL&&size <= 0)
+		InputInvalid = true;
+	return InputInvalid;
+}
+bool CheckMoreThanHalf(int* a, int size,int num)//判断数字是否超过数组长度一半
+{
+	int time = 0;  //数字出现次数
+	for (int i = 0; i < size; ++i)
+	{
+		if (a[i] == num)
+			time++;
+	}
+	bool IsMoreThanHalf = true;
+	if (time * 2 <= size)
+	{
+		IsMoreThanHalf = false;
+		InputInvalid = true;
+	}
+	return IsMoreThanHalf;
+}
+int MoreThanHalfNum(int* a,int size)
+{
+	if (CheckInvalidArray(a, size))
+		return 0;
+
+	int mid = size >> 1;
+	//冒泡排序
+	int end = size - 1;
+	while (end > 0)
+	{
+		for (int i = 0; i < end;++i)
+		{
+			if (a[i]>a[i + 1])
+			{
+				swap(a[i],a[i+1]);
+			}
+		}
+		--end;
+	}
+    //数组中若有一个数字出现次数超过数组长度一半，则排序之后数组
+	//中间的数字一定是那个超过数组长度一般的数字
+	int result = a[mid];
+
+	if (!CheckMoreThanHalf(a, size, result))
+		return 0;
+	return result;
+}
+int main()
+{ 
+  int a[] = { 1,2,3,2,2,2,5,4,2 };
+	int size = sizeof(a) / sizeof(a[0]);
+	cout<<MoreThanHalfNum(a,size);
+	getchar();
+	return 0;
+}
