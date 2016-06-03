@@ -1,0 +1,43 @@
+//输入n个整数，找出其中最小的k个数。例如输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数是1、2、3、4
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+void GetLeastNumbers(int* a,int* output,int size,int k)
+{
+	if (a == NULL || output == NULL || k > size || k <= 0 || size <= 0)
+		return;
+	int end = size - 1;
+	while (end > 0)
+	{
+		bool exchange = false;
+		for (int i = 0; i < end; ++i)
+		{
+			if (a[i]>a[i + 1])
+			{
+				swap(a[i], a[i + 1]);
+				exchange = true;
+			}
+			if (exchange = false)
+				break;
+		}
+		--end;
+	}
+	for (int i = 0; i < k; ++i)
+		output[i] = a[i];
+}
+int main()
+{
+	int a[] = {4,5,1,6,2,7,3,8};
+	int size = sizeof(a) / sizeof(a[0]);
+	int output[10] = {};
+	int k = 4;
+	cout << "最小的"<<k<<"个数是：";
+	GetLeastNumbers(a, output, size, k);
+	for (int i = 0; i < k; ++i)
+	{
+		cout << output[i] << " ";
+	}
+	cout << endl;
+	getchar();
+	return 0;
+}
