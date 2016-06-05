@@ -1,0 +1,31 @@
+//输入一个整数n，求从1到n这n个整数的十进制表示中1出现的次数。例如输入12，从1到12这些整数中
+//包含1的数字有1，10，11和12，1一共出现了5次。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream>
+using namespace std;
+int NumberOf1(unsigned int n)
+{
+	int time = 0;
+	while (n)
+	{
+		if (n % 10 == 1)
+			time++;
+		n = n / 10;
+	}
+	return time;
+}
+int NumberOf1Between1AndN(unsigned int n)
+{
+	int time = 0;
+	for (unsigned int i = 0; i <= n; ++i)
+	{
+		time += NumberOf1(i);
+	}
+	return time;
+}
+int main()
+{
+	cout<<NumberOf1Between1AndN(12);
+	getchar();
+	return 0;
+}
