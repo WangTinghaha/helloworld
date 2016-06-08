@@ -1,0 +1,50 @@
+//输入一个正整数数组，把数组里的所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+//例如输入数组{3，32，321}，则打印出这3个数字能排成的最小数字321323。
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<iostream> 
+using namespace std; 
+ 
+const int maxDigits = 10; //每个整数最长有10个数字组成；
+
+char* g_StrCombine1 = new char[2 * maxDigits + 1];//两个字符串放ab和ba
+char* g_StrCombine2 = new char[2 * maxDigits + 1];
+
+int compare(const void* strNumber1, const void* strNumber2)
+{
+	//得到ab
+	strcpy(g_StrCombine1, *(const char**)strNumber1);
+	strcat(g_StrCombine1, *(const char**)strNumber2);
+	//得到ba
+	strcpy(g_StrCombine2, *(const char**)strNumber2);
+	strcat(g_StrCombine2, *(const char**)strNumber1);
+
+	return strcmp(g_StrCombine1, g_StrCombine2);
+}
+void printMinNumber(int numbers[],int length)
+{
+	if(numbers == NULL || length < 0)
+		return;
+	//建立新的字符串数组
+	char **strNumbers = (char**)(new int[length]);
+	//每个字符串数组的元素建立新的字符串，并复制为numbers中的值
+	for(int i = 0;i < length;++i)
+	{
+		strNumbers[i] = new char[maxDigits + 1];
+		sprintf(strNumbers[i],"%d",numbers[i]);
+	}
+	//快速排序
+	qsort(strNumbers, length, sizeof(char*), compare);
+	
+	for(int i = 0;i < length;++i)
+	{
+		printf("%s",strNumbers[i]);
+	}
+	printf("\n");
+	
+	for(int i = 0;i < length;++i)
+	{
+		delete[] strNumbers[i];
+	}
+	
+	delete[] strNumbers;
+}
